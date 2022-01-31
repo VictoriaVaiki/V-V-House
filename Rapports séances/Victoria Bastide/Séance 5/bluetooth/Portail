@@ -1,0 +1,36 @@
+#include<SoftwareSerial.h>
+#define RX 10
+#define TX 11
+SoftwareSerial BlueT(RX,TX);
+char Data;
+
+#include <Servo.h>  // on inclut la bibliothèque pour piloter un servomoteur
+Servo reservoir;  // on crée l'objet monServo
+
+void setup() {
+  Serial.begin(9600);
+  BlueT.begin(9600);
+  
+  reservoir.attach(8);
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  if (BlueT.available()){
+    Data=BlueT.read();
+
+    //ouverture
+    if(Data=='o')+{
+      reservoir.write(100);
+      delay(2000);}
+
+    //fermeture
+    if(Data=='f'){
+      reservoir.write(80);
+      delay(2000);}
+      
+
+  }
+}
