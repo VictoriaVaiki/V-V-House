@@ -1,0 +1,36 @@
+#include<SoftwareSerial.h>
+#define RX 10
+#define TX 11
+SoftwareSerial BlueT(RX,TX);
+char Data;
+
+#include <Servo.h>  // on inclut la bibliothèque pour piloter un servomoteur
+Servo monServo;  // on crée l'objet monServo
+
+void setup() {
+  Serial.begin(9600);
+  BlueT.begin(9600);
+  
+  monServo.attach(9);
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  if (BlueT.available()){
+    Data=BlueT.read();
+
+    //ouverture
+    if(Data=='O'){
+      monServo.write(35); //ouvre la porte
+      Serial.println("la porte s'ouvre");}
+
+    //fermeture
+    if(Data=='F'){
+      monServo.write(180); //ferme la porte //ouvre la porte
+      Serial.println("la porte se ferme");}
+      
+
+  }
+}
