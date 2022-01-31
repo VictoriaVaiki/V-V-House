@@ -1,0 +1,66 @@
+#include<SoftwareSerial.h>
+#define RX 10
+#define TX 11
+#define LED1 3
+#define LED2 5
+#define LED3 6
+#define LED4 9
+SoftwareSerial BlueT(RX,TX);
+char Data;
+
+
+void setup() {
+  Serial.begin(9600);
+  BlueT.begin(9600);
+  pinMode(LED1,OUTPUT);
+  pinMode(LED2,OUTPUT);
+  pinMode(LED3,OUTPUT);
+  pinMode(LED4,OUTPUT);
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  if (BlueT.available()){
+    Data=BlueT.read();
+
+    //allumage
+    if(Data=='1'){
+      digitalWrite(LED1,HIGH);
+      Serial.println(HIGH);}
+      
+     if(Data=='2'){
+      digitalWrite(LED2,HIGH);
+      Serial.println(HIGH);}
+      
+     if(Data=='3'){
+      digitalWrite(LED3,HIGH);
+      Serial.println(HIGH);}
+     
+      
+     if(Data=='4'){
+      digitalWrite(LED4,HIGH);
+      Serial.println(HIGH);}
+
+
+    //éteignage
+
+     if(Data=='5'){
+      digitalWrite(LED1,LOW);
+      Serial.println(LOW);}
+
+
+     if(Data=='6'){
+      digitalWrite(LED2,LOW);
+      Serial.println(LOW);}
+
+     if(Data=='7'){
+      digitalWrite(LED3,LOW);
+      Serial.println(LOW);}
+
+   if(Data=='8'){
+      digitalWrite(LED4,LOW);
+      Serial.println(LOW);}
+  }
+}
