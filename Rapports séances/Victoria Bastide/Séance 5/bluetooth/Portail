@@ -22,7 +22,7 @@ void loop() {
     Data=BlueT.read();
 
     //ouverture
-    if(Data=='o')+{
+    if(Data=='o'){
       reservoir.write(100);
       delay(2000);}
 
