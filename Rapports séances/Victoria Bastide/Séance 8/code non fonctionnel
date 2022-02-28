@@ -1,0 +1,255 @@
+//-------------------------------------------------------------------------Servo----------------------------------------------------------------------------------------------------//  
+#include <Servo.h>  // on inclut la bibliothèque pour piloter un servomoteur
+Servo portail; 
+Servo porte
+Servo fenetre;// on crée l'objet monServo*/
+
+
+//-------------------------------------------------------------------------LED----------------------------------------------------------------------------------------------------//  
+#define LED1 14
+#define LED2 15
+
+#define LED3 17
+#define LED4 16
+//-------------------------------------------------------------------------Température----------------------------------------------------------------------------------------------------//  
+#include <DHT.h>
+
+#define brocheBranchementDHT 13   // Si la ligne de données du DHT22 est branchée 
+                                //sur la pin D6 de votre Arduino, par exemple
+                     
+#define typeDeDHT DHT22          // Si votre DHT utilisé est un DHT22 (mais cela 
+                                //pourrait aussi bien être un DHT11 ou DHT21, par exemple)
+
+DHT dht(brocheBranchementDHT, typeDeDHT);
+//-------------------------------------------------------------------------LCD----------------------------------------------------------------------------------------------------//  
+//tableau lcd
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(2,3,4,5,6,7);
+
+//-------------------------------------------------------------------------Bluetooth----------------------------------------------------------------------------------------------------//  
+//bluetooth
+#include<SoftwareSerial.h>
+#define RX 10
+#define TX 11
+SoftwareSerial BlueT(RX,TX);
+char Data;
+
+//-------------------------------------------------------------------------Horloge----------------------------------------------------------------------------------------------------//  
+//horloge
+//horloge
+#include <Wire.h>
+#include <ds3231.h>
+
+struct ts t; //déclaration de la variable t
+struct ts nt; //déclaration de la variable nt. Si j'utilise t partout ca ne marche pas
+
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+//-------------------------------------------------------------------------LED----------------------------------------------------------------------------------------------------//  
+  pinMode(LED1,OUTPUT);
+  pinMode(LED2,OUTPUT);
+  pinMode(LED3,OUTPUT);
+  pinMode(LED4,OUTPUT);
+
+//-------------------------------------------------------------------------Bluetooth----------------------------------------------------------------------------------------------------//  
+  BlueT.begin(9600);
+
+//-------------------------------------------------------------------------Servo porte----------------------------------------------------------------------------------------------------//  
+  porte.attach(18);
+
+//-------------------------------------------------------------------------Servo fenetre----------------------------------------------------------------------------------------------------//  
+  fenetre.attach(9);
+//-------------------------------------------------------------------------Servo portail----------------------------------------------------------------------------------------------------//  
+
+    portail.attach(19);
+//-------------------------------------------------------------------------Température---------------------------------------------------------------------------------------------------//  
+  // Initialisation du DHT22;
+  dht.begin();
+  
+//-------------------------------------------------------------------------LCD----------------------------------------------------------------------------------------------------//  
+  //initialise le lcd
+  lcd.begin(16,2);
+
+//-------------------------------------------------------------------------Horloge----------------------------------------------------------------------------------------------------//  
+  //horloge
+    Wire.begin();
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+//-------------------------------------------------------------------------Bluetooth----------------------------------------------------------------------------------------------------// 
+      if (BlueT.available()){
+      Data=BlueT.read();
+      
+//-------------------------------------------------------------------------Servo fenetre----------------------------------------------------------------------------------------------------//  
+   //ouverture
+    if(Data=='o'){
+      portail.write(100);
+      Serial.println("le portail s'ouvre");
+      delay(2000);}
+
+    //fermeture
+    if(Data=='f'){
+      portail.write(80);
+      Serial.println("le portail se ferme");
+      delay(2000);}
+
+//-------------------------------------------------------------------------Servo fenetre----------------------------------------------------------------------------------------------------//  
+
+    //ouverture
+    if(Data=='fe'){
+      fenetre.write(35); //ouvre la porte
+      Serial.println("la porte s'ouvre");}
+
+    //fermeture
+    if(Data=='FE'){
+      fenetre.write(180); //ferme la porte //ouvre la porte
+      Serial.println("la porte se ferme");}
+//-------------------------------------------------------------------------Servo porte----------------------------------------------------------------------------------------------------//  
+
+    //ouverture
+    if(Data=='O'){
+      porte.write(35); //ouvre la porte
+      Serial.println("la porte s'ouvre");}
+
+    //fermeture
+    if(Data=='F'){
+      porte.write(180); //ferme la porte //ouvre la porte
+      Serial.println("la porte se ferme");}
+*/
+
+
+//-------------------------------------------------------------------------LED----------------------------------------------------------------------------------------------------//  
+    //allumage
+    if(Data=='1'){
+      digitalWrite(LED1,HIGH);
+      Serial.println(HIGH);}
+      
+     if(Data=='2'){
+      digitalWrite(LED2,HIGH);
+      Serial.println(HIGH);}
+      
+     if(Data=='3'){
+      digitalWrite(LED3,HIGH);
+      Serial.println(HIGH);}
+     
+      
+     if(Data=='4'){
+      digitalWrite(LED4,HIGH);
+      Serial.println(HIGH);}
+
+
+    //éteignage
+
+     if(Data=='5'){
+      digitalWrite(LED1,LOW);
+      Serial.println(LOW);}
+
+
+     if(Data=='6'){
+      digitalWrite(LED2,LOW);
+      Serial.println(LOW);}
+
+     if(Data=='7'){
+      digitalWrite(LED3,LOW);
+      Serial.println(LOW);}
+
+   if(Data=='8'){
+      digitalWrite(LED4,LOW);
+      Serial.println(LOW);}
+  
+
+
+//-------------------------------------------------------------------------Température----------------------------------------------------------------------------------------------------//      
+     
+      if(Data=='T'){
+  /*       int variable =1;        
+        while(Data=='T'){*/
+        lcd.clear();
+  // Lecture des données
+  float tauxHumidite = dht.readHumidity();              // Lecture du taux d'humidité (en %)
+  float temperatureEnCelsius = dht.readTemperature();   // Lecture de la température, exprimée en degrés Celsius
+
+  // Vérification si données bien reçues
+  if (isnan(tauxHumidite) || isnan(temperatureEnCelsius)) {
+    Serial.println("Aucune valeur retournée par le DHT22. Est-il bien branché ?");
+    delay(2000);
+    return;         // Si aucune valeur n'a été reçue par l'Arduino, on attend 2 secondes, puis on redémarre la fonction loop()
+  }
+
+  // Affichage des valeurs
+  Serial.print("Humidité = "); Serial.print(tauxHumidite); Serial.println(" %");
+  Serial.print("Température = "); Serial.print(temperatureEnCelsius); Serial.println(" °C");
+  Serial.println();
+
+  //affiche sur lcd
+  lcd.setCursor(0,0);
+  lcd.print("Humidity= ");lcd.print(tauxHumidite); lcd.print("%");
+  lcd.setCursor(0,1);
+  lcd.print("Degrees= ");lcd.print(temperatureEnCelsius); lcd.print(" C");
+  
+  // Temporisation de 2 secondes (pour rappel : il ne faut pas essayer de faire plus d'1 lecture toutes les 2 secondes, avec le DHT22, selon le fabricant)
+  delay(2000);
+/*variable =-1;
+if(Data=='B'){
+
+     lcd.clear();
+}
+}  */
+}
+
+
+
+//-------------------------------------------------------------------------Bienvenue----------------------------------------------------------------------------------------------------//
+if(Data=='B'){
+    lcd.clear();
+    lcd.setCursor(3,0);
+          lcd.print("Bienvenue");
+        lcd.setCursor(1,1);
+        lcd.print("a la V&V HOUSE");
+      }
+
+
+//-------------------------------------------------------------------------Horloge----------------------------------------------------------------------------------------------------//
+      if(Data=='H'){
+/*        int variable =1;
+        while(variable ==1){*/
+   lcd.clear();
+   
+  lcd.print("Il est :");
+      
+  DS3231_get(&t);
+  Serial.println(t.year);
+  Serial.print("date : ");
+  Serial.print(t.mday);
+  Serial.print("/");
+  Serial.print(t.mon);
+  Serial.print("/");
+  Serial.print(t.year);
+  Serial.print("\t Heure : ");
+  Serial.print(t.hour);
+  lcd.setCursor(0,1);
+  lcd.print(t.hour);
+  Serial.print(":");
+  Serial.print(t.min);
+  lcd.print("h ");
+  lcd.print(t.min);
+  Serial.print(".");
+  Serial.println(t.sec);
+  lcd.print("min ");
+  lcd.print(t.sec);
+  lcd.print("sec");
+
+  delay(1000);
+/*if(Data=='h'){
+
+     lcd.clear();
+}
+      }*/}
+ 
+
+      }}
+
