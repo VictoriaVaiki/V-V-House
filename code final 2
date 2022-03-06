@@ -1,0 +1,95 @@
+//------------------------------------------------------------------------Bluetooth-----------------------------------------------------------------------------------------------------------
+#include<SoftwareSerial.h>
+#define RX 10
+#define TX 11
+SoftwareSerial BlueT(RX,TX);
+char Data;
+
+//------------------------------------------------------------------------Servo-----------------------------------------------------------------------------------------------------------
+
+#include <Servo.h>  // on inclut la bibliothèque pour piloter un servomoteur
+//                                                                     -----------Portail-----------
+Servo portail;  // on crée l'objet monServo
+//                                                                     -----------Porte-----------
+Servo porte; 
+//                                                                     -----------Fenêtre-----------
+Servo fenetre;
+
+void setup() {
+  Serial.begin(9600);
+
+//------------------------------------------------------------------------Bluetooth-----------------------------------------------------------------------------------------------------------
+
+  BlueT.begin(9600);
+
+//                                                                     -----------Portail-----------
+  portail.attach(19);
+
+//                                                                     -----------Porte-----------
+  porte.attach(6);
+//                                                                     -----------Fenêtre-----------
+  fenetre.attach(18);
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+//------------------------------------------------------------------------Bluetooth-----------------------------------------------------------------------------------------------------------
+
+  if (BlueT.available()){
+    Data=BlueT.read();
+//                                                                     -----------Portail-----------
+    //ouverture
+    if(Data=='o'){
+      portail.write(100);
+      Serial.println("le portail s'ouvre");
+      delay(5000);
+      portail.write(90);}
+
+    //fermeture
+    if(Data=='f'){
+      portail.write(80);
+      Serial.println("le portail se ferme");
+      delay(5000);
+      portail.write(90);}
+
+//                                                                     -----------Fenêtre-----------
+    if(Data=='O'){
+      fenetre.write(55); 
+      delay(2000);
+      //fenetre.detach();
+      Serial.println("la fenêtre s'ouvre");}
+
+    //fermeture
+    if(Data=='F'){
+      fenetre.write(0);
+      delay(200);
+      //fenetre.detach();
+      Serial.println("la fenêtre se ferme");}
+      
+    //stop
+    if(Data=='N'){
+      fenetre.detach(); //ferme la porte //ouvre la porte
+      Serial.println("la fenêtre s'arrête");}
+
+//                                                                     -----------Porte-----------
+    //ouverture
+    if(Data=='w'){
+      porte.write(150); //ouvre la porte
+      Serial.println("la porte s'ouvre");}
+
+    //fermeture
+    if(Data=='c'){
+      porte.write(180); //ferme la porte //ouvre la porte
+      Serial.println("la porte se ferme");}
+    
+    //stop
+        if(Data=='j'){
+         porte.detach();
+        Serial.println("la porte s'immobilise");
+        delay(2000);}  
+      
+
+  }
+}
